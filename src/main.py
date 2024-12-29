@@ -1,6 +1,9 @@
+import os
 import re
 
 from langchain_community.document_loaders import DirectoryLoader
+from langchain_openai import OpenAIEmbeddings
+from langchain_postgres.vectorstores import PGVector
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 
@@ -57,6 +60,19 @@ def main():
         )
         doc_splits = text_splitter.split_documents(cleaned_docs)
         print(f"Length of the split documents: {len(doc_splits)}")
+
+        connection = os.getenv("DATABASE_URL")
+        collection_name = "nextjs_docs"
+
+        vector_store = PGVector(
+            embeddings=OpenAIEmbeddings(model=os.getenv("EMBEDDING_MODEL")),
+            collection_name=collection_name,
+            connection=connection,
+            use_jsonb=True,
+        )
+
+        vector_store.add_documents(doc_splits)
+        print(f"Documents added to the vector store")
 
     except Exception as e:
         print(f"Error in main: {e}")
