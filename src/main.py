@@ -1,10 +1,13 @@
 import os
 import re
 
+from dotenv import load_dotenv
 from langchain_community.document_loaders import DirectoryLoader
 from langchain_openai import OpenAIEmbeddings
 from langchain_postgres.vectorstores import PGVector
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+load_dotenv()
 
 
 def clean_code_blocks(text: str) -> str:
@@ -72,7 +75,7 @@ def main():
         )
 
         vector_store.add_documents(doc_splits)
-        print(f"Documents added to the vector store")
+        print("Documents added to the vector store")
 
     except Exception as e:
         print(f"Error in main: {e}")
