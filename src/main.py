@@ -64,18 +64,28 @@ def main():
         doc_splits = text_splitter.split_documents(cleaned_docs)
         print(f"Length of the split documents: {len(doc_splits)}")
 
-        connection = os.getenv("DATABASE_URL")
-        collection_name = "nextjs_docs"
+        collection_name = "nextjs"
+
+        connection_string = PGVector.connection_string_from_db_params(
+            driver="psycopg",
+            host=os.getenv("DB_HOST"),
+            port=os.getenv("DB_PORT"),
+            database=os.getenv("DB_NAME"),
+            user=os.getenv("DB_USER"),
+            password=os.getenv("DB_PASSWORD"),
+        )
 
         vector_store = PGVector(
+            connection=connection_string,
+            create_extension=True,
             embeddings=OpenAIEmbeddings(model=os.getenv("EMBEDDING_MODEL")),
             collection_name=collection_name,
-            connection=connection,
             use_jsonb=True,
         )
 
         vector_store.add_documents(doc_splits)
         print("Documents added to the vector store")
+        print(vector_store._similarity_search_with_relevance_scores("app router"))
 
     except Exception as e:
         print(f"Error in main: {e}")
