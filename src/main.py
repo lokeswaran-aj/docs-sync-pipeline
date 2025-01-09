@@ -69,11 +69,13 @@ def main():
         connection_string = PGVector.connection_string_from_db_params(
             driver="psycopg",
             host=os.getenv("DB_HOST"),
-            port=os.getenv("DB_PORT"),
+            port=int(os.getenv("DB_PORT")),
             database=os.getenv("DB_NAME"),
             user=os.getenv("DB_USER"),
             password=os.getenv("DB_PASSWORD"),
         )
+
+        print(connection_string)
 
         vector_store = PGVector(
             connection=connection_string,
