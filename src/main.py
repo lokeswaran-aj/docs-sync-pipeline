@@ -32,11 +32,25 @@ def clean_code_blocks(text: str) -> str:
 
 
 def process_documents(docs):
-    """Process and clean documents."""
+    """Process and clean documents while adding additional metadata."""
     for i, doc in enumerate(docs):
         try:
-            print(f"Processing document {i+1}: {doc.metadata.get('source', 'unknown')}")
+
+            # Clean the content
             doc.page_content = clean_code_blocks(doc.page_content)
+
+            # Extract file path and name
+            source_path = doc.metadata.get("source", "")
+
+            # Add additional metadata
+            doc.metadata.update(
+                {
+                    "file_name": os.path.basename(source_path),
+                    "framework": "Next.js",
+                }
+            )
+
+            print(f"Processing document {i+1}: {doc.metadata}")
         except Exception as e:
             print(
                 f"Error processing document {i+1} - {doc.metadata.get('source', 'unknown')}: {e}"
@@ -59,12 +73,12 @@ def main():
         print(f"Length of the cleaned documents: {len(cleaned_docs)}")
 
         text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
-            chunk_size=1000, chunk_overlap=200
+            chunk_size=500, chunk_overlap=100
         )
         doc_splits = text_splitter.split_documents(cleaned_docs)
         print(f"Length of the split documents: {len(doc_splits)}")
 
-        collection_name = "nextjs"
+        collection_name = "documentations"
 
         connection_string = PGVector.connection_string_from_db_params(
             driver="psycopg",
