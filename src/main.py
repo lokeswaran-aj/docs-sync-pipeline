@@ -101,7 +101,7 @@ def main():
 
         vector_store.add_documents(doc_splits)
         print("Documents added to the vector store")
-        print(vector_store._similarity_search_with_relevance_scores("app router"))
+        print(vector_store.similarity_search("app router"))
 
     except Exception as e:
         print(f"Error in main: {e}")
