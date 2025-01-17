@@ -1,0 +1,15 @@
+[project]
+name = "aidocs-sync"
+version = "0.0.1"
+description = "Sync documentations to a vector database"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "langchain-community>=0.3.14",
+    "langchain-openai>=0.3.0",
+    "langchain-postgres>=0.0.12",
+    "langchain-together>=0.3.0",
+    "psycopg-binary>=3.2.3",
+    "python-dotenv>=1.0.1",
+    "unstructured>=0.16.13",
+]
