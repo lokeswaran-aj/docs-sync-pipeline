@@ -12,7 +12,6 @@ load_dotenv()
 framework_configurations = [
     {
         "framework": "Next.js",
-        "collection_name": "Next.js",
         "glob": ["**/*.mdx", "**/*.md"],
         "directory": "repos/next.js/docs",
     }
@@ -110,14 +109,14 @@ def main():
                 connection=connection_string,
                 create_extension=True,
                 embeddings=embeddings,
-                collection_name=config["collection_name"],
+                collection_name="documentation",
                 use_jsonb=True,
                 # pre_delete_collection=True,  # This will recreate the table with correct schema
                 collection_metadata={"framework": config["framework"]},
             )
 
             # Add documents to vector store
-            # vector_store.add_documents(doc_splits)
+            vector_store.add_documents(doc_splits)
             print(f"Documents added to the vector store for {config['framework']}")
 
             # Example search
